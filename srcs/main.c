@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:26:49 by clnicola          #+#    #+#             */
-/*   Updated: 2025/10/20 13:32:47 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/10/20 20:13:47 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,19 +64,20 @@ void	exec(char *cmd, char **env)
 int	main(int ac, char **av, char **env)
 {
 	char	*readl;
-	char	*pwd;
-	char	*user;
+	char	*prompt;
 
-	user = getenv("USER");
-	ac = 0;
-	av = NULL;
+	(void)ac;
+	(void)av;
 	while (1)
 	{
-		pwd = getcwd(NULL, 0);
-		printf("\033[1;32m%s\033[0m", user);
-		readl = readline("$ ");
+		prompt = prompt_name();
+		readl = readline(prompt);
 		if (!ft_strncmp(readl, "exit", 5))
+		{
+			free(readl);
+			free(prompt);
 			exit(1);
+		}
 		exec(readl, env);
 		add_history(readl);
 	}

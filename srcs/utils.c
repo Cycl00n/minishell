@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:56:43 by clnicola          #+#    #+#             */
-/*   Updated: 2025/10/20 12:55:49 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/10/20 20:11:30 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,4 +77,17 @@ void	handle_cmd_errors(char **args, char *path)
 	free(path);
 	free_tabs(args);
 	return ;
+}
+
+char	*prompt_name(void)
+{
+	char	*user;
+	char	*tmp;
+	char	*prompt;
+
+	user = getenv("USER");
+	tmp = ft_strjoin("\001\033[1;32m\002", user);
+	prompt = ft_strjoin(tmp, "\033[0m\002$ ");
+	free(tmp);
+	return (prompt);
 }
