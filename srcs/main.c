@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:26:49 by clnicola          #+#    #+#             */
-/*   Updated: 2025/10/20 13:01:55 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/10/20 13:32:47 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,13 +65,15 @@ int	main(int ac, char **av, char **env)
 {
 	char	*readl;
 	char	*pwd;
+	char	*user;
 
+	user = getenv("USER");
 	ac = 0;
 	av = NULL;
 	while (1)
 	{
 		pwd = getcwd(NULL, 0);
-		printf("%s", pwd);
+		printf("\033[1;32m%s\033[0m", user);
 		readl = readline("$ ");
 		if (!ft_strncmp(readl, "exit", 5))
 			exit(1);
