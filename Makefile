@@ -11,6 +11,8 @@ LIBFT = includes/$(LIBFT_DIR)/libft.a
 
 SRC = main.c\
 	utils.c\
+	utils1.c\
+	builtin_commands.c
 
 SOURCES = $(addprefix $(SRC_DIR)/, $(SRC))
 OBJS = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
