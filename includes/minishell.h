@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:25:06 by clnicola          #+#    #+#             */
-/*   Updated: 2025/10/20 12:02:15 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/10/23 12:37:51 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,5 +27,9 @@ char	*get_path(char **env);
 char	*get_cmd(char **env, char *cmd);
 void	handle_cmd_errors(char **args, char *path);
 void	exec(char *cmd, char **env);
+char	*prompt_name(void);
+void	builtin_echo(char *cmd);
+void	builtin_exit(char *readl, char *prompt);
+int		ft_strisnum(char *str);
 
 #endif
