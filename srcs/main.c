@@ -6,11 +6,30 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:26:49 by clnicola          #+#    #+#             */
-/*   Updated: 2025/10/20 20:13:47 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/10/23 13:00:31 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	built_in_commands(char *cmd, char *prompt)
+{
+	char	**args;
+
+	args = ft_split(cmd, ' ');
+	if (!ft_strncmp(args[0], "echo", 4))
+	{
+		builtin_echo(cmd);
+		return (1);
+	}
+	else if (!ft_strncmp(args[0], "exit", 4))
+	{
+		builtin_exit(cmd, prompt);
+		return (1);
+	}
+	else
+		return (0);
+}
 
 static char	**parse_command(char *cmd)
 {
@@ -72,13 +91,8 @@ int	main(int ac, char **av, char **env)
 	{
 		prompt = prompt_name();
 		readl = readline(prompt);
-		if (!ft_strncmp(readl, "exit", 5))
-		{
-			free(readl);
-			free(prompt);
-			exit(1);
-		}
-		exec(readl, env);
+		if (!built_in_commands(readl, prompt))
+			exec(readl, env);
 		add_history(readl);
 	}
 	free(readl);
