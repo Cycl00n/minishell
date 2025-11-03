@@ -6,20 +6,19 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/01 09:16:44 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/01 09:16:57 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/03 13:19:22 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	builtin_exit(char *readl, char *prompt)
+void	builtin_exit(char *readl)
 {
 	char	**args;
 
 	args = ft_split(readl, ' ');
 	printf("exit\n");
 	free(readl);
-	free(prompt);
 	if (args[1] && args[2])
 	{
 		printf("minishell: exit: too many arguments\n");

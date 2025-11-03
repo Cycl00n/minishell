@@ -1,26 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parsing.c                                          :+:      :+:    :+:   */
+/*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/01 08:32:00 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/03 14:41:05 by clnicola         ###   ########.fr       */
+/*   Created: 2025/11/03 11:55:22 by clnicola          #+#    #+#             */
+/*   Updated: 2025/11/03 13:25:39 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	parsing(t_data *data)
+void	builtin_env(char *cmd, char **env)
 {
-	int	i;
+	int		i;
+	char	**args;
 
 	i = 0;
-	data->cmd->args = ft_split(data->input, ' ');
-	while (data->cmd->args[i])
+	args = ft_split(cmd, ' ');
+	while (env[i])
 	{
-		printf("[%d] %s\n", i, data->cmd->args[i]);
+		printf("%s\n", env[i]);
 		i++;
 	}
 }

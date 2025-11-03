@@ -6,25 +6,30 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:26:49 by clnicola          #+#    #+#             */
-/*   Updated: 2025/10/23 13:00:31 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/03 14:39:16 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	built_in_commands(char *cmd, char *prompt)
+static int	built_in_commands(t_data *data, char **env)
 {
 	char	**args;
 
-	args = ft_split(cmd, ' ');
+	args = ft_split(data->input, ' ');
 	if (!ft_strncmp(args[0], "echo", 4))
 	{
-		builtin_echo(cmd);
+		builtin_echo(data->input);
 		return (1);
 	}
 	else if (!ft_strncmp(args[0], "exit", 4))
 	{
-		builtin_exit(cmd, prompt);
+		builtin_exit(data->input);
+		return (1);
+	}
+	else if (!ft_strncmp(args[0], "env", 3))
+	{
+		builtin_env(data->input, env);
 		return (1);
 	}
 	else
@@ -82,19 +87,21 @@ void	exec(char *cmd, char **env)
 
 int	main(int ac, char **av, char **env)
 {
-	char	*readl;
 	char	*prompt;
+	t_data	data;
 
 	(void)ac;
 	(void)av;
 	while (1)
 	{
+		// data_init(&data, env);
 		prompt = prompt_name();
-		readl = readline(prompt);
-		if (!built_in_commands(readl, prompt))
-			exec(readl, env);
-		add_history(readl);
+		data.input = readline(prompt);
+		parsing(&data);
+		if (!built_in_commands(&data, env))
+			exec(data.input, env);
+		add_history(data.input);
 	}
-	free(readl);
+	free(data.input);
 	return (0);
 }
