@@ -22,6 +22,7 @@ SOURCES = \
 	ft_calloc.c \
 	ft_isdigit.c \
 	ft_memcpy.c \
+	ft_strcmp.c \
 	ft_strdup.c \
 	ft_strlen.c \
 	ft_strtrim.c \

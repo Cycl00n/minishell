@@ -1,107 +1,98 @@
-/* ************************************************************************** */
+/* ************************************************************************* */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/20 11:26:49 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/03 14:39:16 by clnicola         ###   ########.fr       */
+/*   Created: 2025/11/04 14:08:58 by clnicola          #+#    #+#             */
+/*   Updated: 2025/11/04 14:55:47 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	built_in_commands(t_data *data, char **env)
+void	word_to_token(t_data *data, char *input)
 {
-	char	**args;
+	int		i;
+	char	**tokens;
+	t_token	*new;
+	t_token	*last;
 
-	args = ft_split(data->input, ' ');
-	if (!ft_strncmp(args[0], "echo", 4))
+	tokens = ft_split(input, ' ');
+	data->token = NULL;
+	i = -1;
+	while (tokens[++i])
 	{
-		builtin_echo(data->input);
-		return (1);
+		new = malloc(sizeof(t_token));
+		new->token = ft_strdup(tokens[i]);
+		new->next = NULL;
+		if (!data->token)
+			data->token = new;
+		else
+		{
+			last = data->token;
+			while (last->next)
+				last = last->next;
+			last->next = new;
+		}
 	}
-	else if (!ft_strncmp(args[0], "exit", 4))
-	{
-		builtin_exit(data->input);
-		return (1);
-	}
-	else if (!ft_strncmp(args[0], "env", 3))
-	{
-		builtin_env(data->input, env);
-		return (1);
-	}
-	else
-		return (0);
 }
 
-static char	**parse_command(char *cmd)
+void	assign_token_type(t_data *data)
 {
-	char	**args;
+	t_token	*tmp;
 
-	if (cmd == NULL)
-		return (NULL);
-	args = ft_split(cmd, ' ');
-	if (!args || !args[0])
+	tmp = data->token;
+	while (tmp)
 	{
-		if (args)
-			free_tabs(args);
-		return (NULL);
+		if (ft_strcmp(tmp->token, "|") == 0)
+			tmp->type = PIPE;
+		else if (ft_strcmp(tmp->token, "<<") == 0)
+			tmp->type = HEREDOC;
+		else if (ft_strcmp(tmp->token, ">>") == 0)
+			tmp->type = APPEND;
+		else if (ft_strcmp(tmp->token, "<") == 0)
+			tmp->type = INPUT;
+		else if (ft_strcmp(tmp->token, ">") == 0)
+			tmp->type = TRUNC;
+		else if (tmp->token[0] == '$' && tmp->token[1] != '\0')
+			tmp->type = VAR;
+		else
+			tmp->type = WORD;
+		tmp = tmp->next;
 	}
-	return (args);
 }
 
-static void	child(char *path, char **args, char **env)
+void	parsing(t_data *data, char *input)
 {
-	if (execve(path, args, env) == -1)
-		handle_cmd_errors(args, path);
-	exit(1);
-}
-
-void	exec(char *cmd, char **env)
-{
-	char	**args;
-	char	*path;
-	pid_t	pid;
-
-	args = parse_command(cmd);
-	if (!args)
-		return ;
-	path = get_cmd(env, args[0]);
-	if (!path)
-	{
-		handle_cmd_errors(args, path);
-		return ;
-	}
-	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		return ;
-	}
-	if (pid == 0)
-		child(path, args, env);
-	waitpid(pid, NULL, 0);
+	word_to_token(data, input);
+	assign_token_type(data);
 }
 
 int	main(int ac, char **av, char **env)
 {
-	char	*prompt;
-	t_data	data;
+	t_data	*data;
+	t_token	*tmp;
 
 	(void)ac;
 	(void)av;
+	(void)env;
+	data = malloc(sizeof(t_data));
 	while (1)
 	{
-		// data_init(&data, env);
-		prompt = prompt_name();
-		data.input = readline(prompt);
-		parsing(&data);
-		if (!built_in_commands(&data, env))
-			exec(data.input, env);
-		add_history(data.input);
+		data->input = readline("testenv$ ");
+		if (!data->input)
+			break ;
+		parsing(data, data->input);
+		tmp = data->token;
+		while (tmp)
+		{
+			printf("[%d] %s\n", tmp->type, tmp->token);
+			tmp = tmp->next;
+		}
+		free(data->input);
 	}
-	free(data.input);
+	free(data->input);
 	return (0);
 }

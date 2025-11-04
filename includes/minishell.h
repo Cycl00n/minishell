@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:25:06 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/03 14:37:44 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/04 17:32:27 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 
 typedef struct s_token
 {
-	char				*str;
+	char				*token;
 	int					type;
 	struct s_token		*previous;
 	struct s_token		*next;
@@ -47,16 +47,16 @@ typedef struct s_data
 	t_token				*token;
 }						t_data;
 
-void					free_tabs(char **args);
-char					*get_path(char **env);
-char					*get_cmd(char **env, char *cmd);
-void					handle_cmd_errors(char **args, char *path);
-void					exec(char *cmd, char **env);
-char					*prompt_name(void);
-void					builtin_echo(char *cmd);
-void					builtin_exit(char *readl);
-int						ft_strisnum(char *str);
-void					builtin_env(char *cmd, char **env);
-void					parsing(t_data *data);
+enum					token_type
+{
+	WORD,
+	VAR,
+	PIPE,
+	HEREDOC,
+	APPEND,
+	INPUT,
+	TRUNC,
+	END,
+};
 
 #endif
