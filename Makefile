@@ -10,13 +10,10 @@ INC_PATH = ./includes/
 LIBFT_PATH = ./Libft/
 LIBFT = ./includes/$(LIBFT_PATH)libft.a
 
-SRC = main.c\
-	utils/utils.c\
-	utils/utils1.c\
-	builtin/builtin_echo.c\
-	builtin/builtin_exit.c\
-	builtin/builtin_env.c\
-	parsing/parsing.c
+SRC = parsing/main_parsing.c\
+parsing/ft_split_token.c\
+utils/utils.c\
+utils/utils1.c\
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))
 OBJS = $(SRCS:$(SRC_PATH)%.c=$(OBJ_PATH)%.o)

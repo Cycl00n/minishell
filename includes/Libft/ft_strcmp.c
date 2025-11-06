@@ -1,37 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/23 12:35:32 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/06 14:23:12 by clnicola         ###   ########.fr       */
+/*   Created: 2025/11/04 17:38:36 by clnicola          #+#    #+#             */
+/*   Updated: 2025/11/04 17:38:54 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	ft_strisnum(char *str)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-	int	i;
+	size_t	i;
 
 	i = 0;
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		else
-			i++;
-	}
-	return (1);
-}
-int	ft_is_space(char c)
-{
-	return (c == ' ' || c == '\t' || c == '\n');
-}
-
-int	ft_is_operator(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
+	while (s1[i] && s1[i] == s2[i])
+		i++;
+	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
