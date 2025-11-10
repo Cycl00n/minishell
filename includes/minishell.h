@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
+/*   By: rlefort <rlefort@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:25:06 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/06 15:03:09 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/10 17:37:31 by rlefort          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_data
 	int					type;
 	t_command			*cmd;
 	t_token				*token;
-	t_env				env;
+	t_env				**env;
 }						t_data;
 
 /*------PARSING------*/
@@ -78,7 +78,7 @@ t_token					*ft_word_to_token(char *input);
 void					ft_assign_token_type(t_data *data);
 void					ft_parsing(t_data *data, char *input);
 
-/*------UTILS------*/
+/*---PARSING_UTILS---*/
 void					ft_free_tabs(char **args);
 char					*ft_get_path(char **env);
 char					*ft_get_cmd(char **env, char *cmd);
@@ -88,4 +88,11 @@ int						ft_strisnum(char *str);
 int						ft_is_space(char c);
 int						ft_is_operator(char c);
 
+/*------COMMANDS------*/
+
+
+/*---COMMANDS_UTILS---*/
+int						ft_set_env(char *name, char *value, t_env **env);
+int						ft_rm_env(char *name, t_env **env);
+t_env					**ft_initialize_env(void);
 #endif
