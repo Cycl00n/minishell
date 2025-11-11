@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:25:06 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/06 15:03:09 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/11 10:24:00 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ t_token					*ft_new_token(char *value, enum token_type type);
 t_token					*ft_word_to_token(char *input);
 void					ft_assign_token_type(t_data *data);
 void					ft_parsing(t_data *data, char *input);
+char					*extract_operator(char *str, int *i);
+char					*extract_word(char *str, int *i);
 
 /*------UTILS------*/
 void					ft_free_tabs(char **args);
