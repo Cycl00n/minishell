@@ -6,7 +6,7 @@
 /*   By: rlefort <rlefort@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:25:06 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/11 15:58:59 by rlefort          ###   ########.fr       */
+/*   Updated: 2025/11/12 14:13:41 by rlefort          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,9 +96,10 @@ void					ft_unset(char **args, t_env **env);
 
 /*---COMMANDS_UTILS---*/
 int						ft_set_env(char *name, char *value, t_env **env);
+char					*ft_get_env_value(char *name, t_env **env);
 int						ft_rm_env(char *name, t_env **env);
-t_env					*ft_new_env_var(char *name, char *value, t_env *next);
 t_env					**ft_initialize_env(void);
+t_env					*ft_new_env_var(char *name, char *value, t_env *next);
 t_env					**ft_copy_env(t_env **env);
 void					ft_swap_env(t_env **env, t_env *to_swap);
 void					ft_free_env(t_env **env);

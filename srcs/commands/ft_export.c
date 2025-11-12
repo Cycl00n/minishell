@@ -6,7 +6,7 @@
 /*   By: rlefort <rlefort@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/05 17:59:54 by rlefort           #+#    #+#             */
-/*   Updated: 2025/11/12 13:41:53 by rlefort          ###   ########.fr       */
+/*   Updated: 2025/11/12 14:35:32 by rlefort          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static char	*build_var_line(t_env *var)
 {
 	char	*var_line;
 	size_t	size;
-	
+
 	size = 11 + ft_strlen(var->name) + 1 + ft_strlen(var->value) + 2;
 	var_line = calloc(sizeof(char), size);
 	ft_strlcat(var_line, "declare -x ", size);
@@ -24,7 +24,7 @@ static char	*build_var_line(t_env *var)
 	ft_strlcat(var_line, "=", size);
 	ft_strlcat(var_line, var->value, size);
 	ft_strlcat(var_line, "\n", size);
-	return(var_line);
+	return (var_line);
 }
 
 static char	*ft_export_output(t_env **env)
@@ -33,10 +33,11 @@ static char	*ft_export_output(t_env **env)
 	char	*var_line;
 	char	*tmp;
 	t_env	*curr;
+
 	if (!env)
 		return (NULL);
 	curr = *env;
-	env_vars = calloc(1,1);
+	env_vars = calloc(1, 1);
 	while (curr)
 	{
 		if (curr->name && curr->name[0])
@@ -88,24 +89,22 @@ void	ft_export(char **args, t_env **env)
 	char	*eq_pos;
 	char	*name;
 	char	*value;
-	//							ft_printf("export start\n");
+
 	if (!env || !args || !args[0])
 		return ;
 	index = 0;
 	while (args[index])
 	{
-			//							ft_printf("export loop \n");
 		if (args[index] && args[index][0])
 		{
-			//								ft_printf("condition OK \n");
 			eq_pos = ft_strchr(args[index], '=');
-			if(eq_pos)
+			if (eq_pos)
 			{
-			value = &eq_pos[1];
-			name =ft_substr(args[index], 0, (size_t)(eq_pos - args[index]));
-			//							ft_printf("call SETENV \n");
-			ft_set_env(name, value, env);	
-			free(name);		
+				value = &eq_pos[1];
+				name = ft_substr(args[index], 0,
+						(size_t)(eq_pos - args[index]));
+				ft_set_env(name, value, env);
+				free(name);
 			}
 		}
 		index++;

@@ -6,33 +6,11 @@
 /*   By: rlefort <rlefort@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 15:29:19 by rlefort           #+#    #+#             */
-/*   Updated: 2025/11/12 13:42:49 by rlefort          ###   ########.fr       */
+/*   Updated: 2025/11/12 14:28:00 by rlefort          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-t_env	*ft_new_env_var(char *name, char *value, t_env *next)
-{
-	t_env	*curr;
-	
-	curr = malloc(sizeof(t_env));
-	if (!curr)
-		return (NULL);
-	curr->name = ft_strdup(name);
-	curr->value = ft_strdup(value);
-	if (!curr->name || !curr->value)
-	{
-		if (curr->name)
-			free(curr->name);
-		if (curr->value)
-			free(curr->value);
-		free(curr);
-		return(NULL);
-	}
-	curr->next = next;
-	return (curr);
-}
 
 int	ft_set_env(char *name, char *value, t_env **env)
 {
@@ -45,10 +23,8 @@ int	ft_set_env(char *name, char *value, t_env **env)
 	prev = NULL;
 	while (curr)
 	{
-//									ft_printf("loop setenv\n");
 		if (!ft_strcmp(name, curr->name))
 		{
-	///										ft_printf("setenv cond ok\n");
 			free(curr->value);
 			curr->value = ft_strdup(value);
 			return (0);
@@ -56,7 +32,6 @@ int	ft_set_env(char *name, char *value, t_env **env)
 		prev = curr;
 		curr = curr->next;
 	}
-//									ft_printf("call new_env_var\n");
 	curr = ft_new_env_var(name, value, NULL);
 	if (!curr)
 		return (1);
@@ -67,10 +42,31 @@ int	ft_set_env(char *name, char *value, t_env **env)
 	return (0);
 }
 
+char	*ft_get_env_value(char *name, t_env **env)
+{
+	char	*value;
+	t_env	*curr;
+
+	if (!name || !name[0] || !env)
+		return (NULL);
+	curr = *env;
+	value = NULL;
+	while (curr)
+	{
+		if (curr->name && !ft_strcmp(curr->name, name))
+		{
+			value = curr->value;
+			break ;
+		}
+		curr = curr->next;
+	}
+	return (value);
+}
+
 int	ft_rm_env(char *name, t_env **env)
 {
 	t_env	*prev;
-	t_env 	*curr;
+	t_env	*curr;
 
 	if (!name || !name[0] || !env)
 		return (1);
@@ -87,7 +83,7 @@ int	ft_rm_env(char *name, t_env **env)
 			free(curr->name);
 			free(curr->value);
 			free(curr);
-			break;	
+			break ;
 		}
 		prev = curr;
 		curr = curr->next;
@@ -110,7 +106,7 @@ static char	*ft_get_parent_shlvl(void)
 	return (shlvl);
 }
 
-t_env **ft_initialize_env(void)
+t_env	**ft_initialize_env(void)
 {
 	char	*value;
 	t_env	**env;
