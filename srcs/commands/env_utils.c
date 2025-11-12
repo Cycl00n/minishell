@@ -6,13 +6,13 @@
 /*   By: rlefort <rlefort@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/10 15:29:19 by rlefort           #+#    #+#             */
-/*   Updated: 2025/11/10 17:36:52 by rlefort          ###   ########.fr       */
+/*   Updated: 2025/11/12 13:42:49 by rlefort          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static t_env	*ft_new_env_var(char *name, char *value, t_env *next)
+t_env	*ft_new_env_var(char *name, char *value, t_env *next)
 {
 	t_env	*curr;
 	
@@ -39,36 +39,31 @@ int	ft_set_env(char *name, char *value, t_env **env)
 	t_env	*curr;
 	t_env	*prev;
 
-	if (!env || !name || !name[0])
+	if (!env || !name || !name[0] || !value)
 		return (1);
-													ft_putendl_fd("----set start OK", 1);
 	curr = *env;
-													ft_putendl_fd("----init curr OK", 1);
+	prev = NULL;
 	while (curr)
 	{
-													ft_putendl_fd("----start loop cycle", 1);
+//									ft_printf("loop setenv\n");
 		if (!ft_strcmp(name, curr->name))
 		{
-													ft_putendl_fd("----got equality", 1);
+	///										ft_printf("setenv cond ok\n");
 			free(curr->value);
 			curr->value = ft_strdup(value);
-													ft_putendl_fd("----replace value OK", 1);
 			return (0);
 		}
 		prev = curr;
 		curr = curr->next;
-													ft_putendl_fd("----loopcycle OK", 1);
 	}
-													ft_putendl_fd("----endloop OK", 1);
+//									ft_printf("call new_env_var\n");
 	curr = ft_new_env_var(name, value, NULL);
-														ft_putendl_fd("----create var OK", 1);
 	if (!curr)
 		return (1);
 	if (prev)
 		prev->next = curr;
 	else
 		*env = curr;
-														ft_putendl_fd("----set end OK", 1);
 	return (0);
 }
 
@@ -122,23 +117,16 @@ t_env **ft_initialize_env(void)
 
 	env = calloc(sizeof(t_env *), 1);
 	*env = ft_new_env_var("PWD", getcwd(NULL, 0), NULL);
-													ft_putendl_fd("pwd OK", 1);
 	value = ft_get_parent_shlvl();
-													ft_putendl_fd("getshlvl OK", 1);
 	ft_set_env("SHLVL", value, env);
-													ft_putendl_fd("shlvl OK", 1);
 	free(value);
 	value = getenv("PATH");
-													ft_putendl_fd("getpath OK", 1);
 	if (!value)
 		value = "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin";
 	ft_set_env("PATH", value, env);
-													ft_putendl_fd("path OK", 1);
 	value = getenv("HOME");
-													ft_putendl_fd("gethome OK", 1);
 	if (!value)
 		value = "/home";
 	ft_set_env("HOME", value, env);
-													ft_putendl_fd("home OK", 1);
 	return (env);
 }
