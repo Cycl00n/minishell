@@ -12,6 +12,7 @@ LIBFT = ./includes/$(LIBFT_PATH)libft.a
 
 SRC = parsing/main_parsing.c\
 parsing/ft_split_token.c\
+parsing/parsing_token.c\
 utils/utils.c\
 utils/utils1.c\
 
