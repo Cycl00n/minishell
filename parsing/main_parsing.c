@@ -1,103 +1,30 @@
-/* ************************************************************************* */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/04 14:08:58 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/04 14:55:47 by clnicola         ###   ########.fr       */
+/*   Created: 2025/11/17 14:19:02 by clnicola          #+#    #+#             */
+/*   Updated: 2025/11/17 14:31:44 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*build_unquoted_token(char *str, int *i, int len)
-{
-	char	*result;
-	char	quote_char;
-	int		j;
-
-	result = malloc(len + 1);
-	if (!result)
-		return (NULL);
-	j = 0;
-	while (str[*i])
-	{
-		if (str[*i] == '\'' || str[*i] == '"')
-		{
-			quote_char = str[*i];
-			(*i)++;
-			while (str[*i] && str[*i] != quote_char)
-				result[j++] = str[(*i)++];
-			if (str[*i] == quote_char)
-				(*i)++;
-		}
-		else if (ft_is_space(str[*i]) || ft_is_operator(str[*i]))
-			break ;
-		else
-			result[j++] = str[(*i)++];
-	}
-	result[j] = '\0';
-	return (result);
-}
-
-char	*extract_word(char *str, int *i)
-{
-	int		start;
-	int		len;
-	char	quote_char;
-
-	start = *i;
-	len = 0;
-	while (str[*i])
-	{
-		if (str[*i] == '\'' || str[*i] == '"')
-		{
-			quote_char = str[*i];
-			(*i)++;
-			while (str[*i] && str[*i] != quote_char)
-			{
-				len++;
-				(*i)++;
-			}
-			if (!str[*i])
-			{
-				ft_putstr_fd("Error: unterminated quote\n", 2);
-				return (ft_strdup(""));
-			}
-			(*i)++;
-		}
-		else if (ft_is_space(str[*i]) || ft_is_operator(str[*i]))
-			break ;
-		else
-		{
-			len++;
-			(*i)++;
-		}
-	}
-	*i = start;
-	return (build_unquoted_token(str, i, len));
-}
-
 char	*extract_operator(char *str, int *i)
 {
-	char	*operator;
+	char	*operators;
 	int		len;
 
 	if ((str[*i] == '<' && str[*i + 1] == '<') || (str[*i] == '>' && str[*i
 			+ 1] == '>'))
-	{
-		operator= ft_substr(str, *i, 2);
 		len = 2;
-	}
 	else
-	{
-		operator= ft_substr(str, *i, 1);
 		len = 1;
-	}
+	operators = ft_substr(str, *i, len);
 	*i += len;
-	return (operator);
+	return (operators);
 }
 
 t_token	*ft_new_token(char *value, enum token_type type)
@@ -118,13 +45,45 @@ t_token	*ft_new_token(char *value, enum token_type type)
 	return (token);
 }
 
+static void	add_back_token(t_token **head, t_token *new)
+{
+	t_token	*tmp;
+
+	if (!*head)
+	{
+		*head = new;
+		return ;
+	}
+	tmp = *head;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
+}
+
+static t_token	*make_token(char *input, int *i)
+{
+	char	*str;
+	t_token	*tok;
+
+	if (ft_is_operator(input[*i]))
+	{
+		str = extract_operator(input, i);
+		tok = ft_new_token(str, VOID);
+	}
+	else
+	{
+		str = extract_word(input, i);
+		tok = ft_new_token(str, WORD);
+	}
+	free(str);
+	return (tok);
+}
+
 t_token	*ft_word_to_token(char *input)
 {
-	int		i;
-	t_token	*new;
-	t_token	*last;
 	t_token	*head;
-	char	*str;
+	t_token	*new;
+	int		i;
 
 	head = NULL;
 	i = 0;
@@ -135,27 +94,8 @@ t_token	*ft_word_to_token(char *input)
 			i++;
 			continue ;
 		}
-		else if (ft_is_operator(input[i]))
-		{
-			str = extract_operator(input, &i);
-			new = ft_new_token(str, VOID);
-			free(str);
-		}
-		else
-		{
-			str = extract_word(input, &i);
-			new = ft_new_token(str, WORD);
-			free(str);
-		}
-		if (!head)
-			head = new;
-		else
-		{
-			last = head;
-			while (last->next)
-				last = last->next;
-			last->next = new;
-		}
+		new = make_token(input, &i);
+		add_back_token(&head, new);
 	}
 	return (head);
 }
