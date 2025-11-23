@@ -1,28 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   tokenizer.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/23 12:35:32 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/23 20:01:13 by clnicola         ###   ########.fr       */
+/*   Created: 2025/11/17 14:19:02 by clnicola          #+#    #+#             */
+/*   Updated: 2025/11/23 22:00:00 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_strisnum(char *str)
+t_token	*ft_new_token(char *value, t_token_type type)
 {
-	int	i;
+	t_token	*token;
 
-	i = 0;
-	while (str[i])
+	token = malloc(sizeof(t_token));
+	if (!token)
+		return (NULL);
+	token->token = ft_strdup(value);
+	if (!token->token)
 	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		else
-			i++;
+		free(token);
+		return (NULL);
 	}
-	return (1);
+	token->type = type;
+	token->next = NULL;
+	return (token);
 }

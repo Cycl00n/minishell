@@ -1,85 +1,56 @@
-/* ************************************************************************* */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
+/*   main_parsing.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/04 14:08:58 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/04 14:55:47 by clnicola         ###   ########.fr       */
+/*   Created: 2025/11/17 14:19:02 by clnicola          #+#    #+#             */
+/*   Updated: 2025/11/23 22:00:00 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-char	*extract_word(char *str, int i)
+static void	print_args(t_command *cmd)
 {
-	bool	quote;
-	int		len;
-	int		start;
-	char	q;
+	int	i;
 
-	start = i;
-	quote = false;
-	q = '\0';
-	while (str[i])
+	printf("Command: ");
+	i = 0;
+	while (cmd->args && cmd->args[i])
 	{
-		if (!quote && (str[i] == '\'' || str[i] == '"'))
-		{
-			quote = true;
-			start = ++i;
-			q = str[i];
-		}
-		else if (quote && str[i] == q)
-			break ;
-		else if (!quote && (ft_is_space(str[i]) || ft_is_operator(str[i])))
-			break ;
+		printf("[%s] ", cmd->args[i]);
 		i++;
 	}
-	len = i - start;
-	return (ft_substr(str, start, len));
+	printf("\n");
 }
 
-char	*extract_operator(char *str, int i)
+static void	print_redirects(t_redir *redir)
 {
-	char	*operator;
-
-	if ((str[i] == '<' && str[i + 1] == '<') || (str[i] == '>' && str[i
-			+ 1] == '>'))
+	while (redir)
 	{
-		operator= ft_substr(str, i, 2);
-		i += 2;
-		return (operator);
+		printf("  Redirect: type=%d, file=[%s]\n", redir->type, redir->file);
+		redir = redir->next;
 	}
-	if (str[i] == '<' || str[i] == '>' || str[i] == '|')
-	{
-		operator= ft_substr(str, i, 1);
-		i++;
-		return (operator);
-	}
-	return (NULL);
 }
 
-t_token	*ft_new_token(char *value, enum token_type type)
+static void	ft_display_commands(t_command *cmd)
 {
-	t_token	*token;
-
-	token = malloc(sizeof(t_token));
-	if (!token)
-		return (NULL);
-	token->token = ft_strdup(value);
-	token->type = type;
-	token->next = NULL;
-	return (token);
+	while (cmd)
+	{
+		print_args(cmd);
+		if (cmd->redirs)
+			print_redirects(cmd->redirs);
+		cmd = cmd->next;
+	}
 }
 
 t_token	*ft_word_to_token(char *input)
 {
-	int		i;
-	t_token	*new;
-	t_token	*last;
 	t_token	*head;
-	char	*str;
+	t_token	*new;
+	int		i;
 
 	head = NULL;
 	i = 0;
@@ -90,62 +61,18 @@ t_token	*ft_word_to_token(char *input)
 			i++;
 			continue ;
 		}
-		else if (ft_is_operator(input[i]))
-		{
-			str = extract_operator(input, i);
-			i += ft_strlen(str);
-			new = ft_new_token(str, VOID);
-			free(str);
-		}
-		else
-		{
-			str = extract_word(input, i);
-			i += ft_strlen(str);
-			new = ft_new_token(str, WORD);
-			free(str);
-		}
-		if (!head)
-			head = new;
-		else
-		{
-			last = head;
-			while (last->next)
-				last = last->next;
-			last->next = new;
-		}
+		new = ft_make_token(input, &i);
+		ft_add_back_token(&head, new);
 	}
 	return (head);
-}
-
-void	ft_assign_token_type(t_data *data)
-{
-	t_token	*tmp;
-
-	tmp = data->token;
-	while (tmp)
-	{
-		if (ft_strcmp(tmp->token, "|") == 0)
-			tmp->type = PIPE;
-		else if (ft_strcmp(tmp->token, "<<") == 0)
-			tmp->type = HEREDOC;
-		else if (ft_strcmp(tmp->token, ">>") == 0)
-			tmp->type = APPEND;
-		else if (ft_strcmp(tmp->token, "<") == 0)
-			tmp->type = INPUT;
-		else if (ft_strcmp(tmp->token, ">") == 0)
-			tmp->type = TRUNC;
-		else if (tmp->token[0] == '$' && tmp->token[1] != '\0')
-			tmp->type = VAR;
-		else
-			tmp->type = WORD;
-		tmp = tmp->next;
-	}
 }
 
 void	ft_parsing(t_data *data, char *input)
 {
 	data->token = ft_word_to_token(input);
 	ft_assign_token_type(data);
+	data->cmd = ft_tokens_to_commands(data->token);
+	ft_display_commands(data->cmd);
 }
 
 int	main(int ac, char **av, char **env)
@@ -163,6 +90,7 @@ int	main(int ac, char **av, char **env)
 		if (!data->input)
 			break ;
 		ft_parsing(data, data->input);
+		add_history(data->input);
 		tmp = data->token;
 		while (tmp)
 		{

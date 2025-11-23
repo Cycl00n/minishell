@@ -11,10 +11,18 @@ LIBFT_PATH = ./Libft/
 LIBFT = ./includes/$(LIBFT_PATH)libft.a
 
 SRC = parsing/main_parsing.c\
-parsing/ft_split_token.c\
-parsing/parsing_token.c\
+parsing/parsing_helpers.c\
+parsing/lexer_utils.c\
+parsing/word_extraction.c\
+parsing/command_parser.c\
+parsing/command_builder.c\
+parsing/command_converter.c\
+parsing/command_converter_utils.c\
+parsing/command_converter_args.c\
+parsing/tokenizer.c\
 utils/utils.c\
 utils/utils1.c\
+utils/utils_path.c
 
 SRCS = $(addprefix $(SRC_PATH), $(SRC))
 OBJS = $(SRCS:$(SRC_PATH)%.c=$(OBJ_PATH)%.o)
@@ -31,7 +39,6 @@ $(OBJ_PATH):
 $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(C_FLAGS) -c $< -o $@ $(INC)
-
 
 $(NAME): $(OBJS)
 	$(CC) $(C_FLAGS) $(OBJS) -o $@ $(INC) $(LIBFT) -lreadline -lhistory

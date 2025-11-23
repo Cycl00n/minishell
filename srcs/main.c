@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:26:49 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/03 14:39:16 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/23 20:19:54 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ static char	**parse_command(char *cmd)
 	if (!args || !args[0])
 	{
 		if (args)
-			free_tabs(args);
+			ft_free_tabs(args);
 		return (NULL);
 	}
 	return (args);
@@ -55,7 +55,7 @@ static char	**parse_command(char *cmd)
 static void	child(char *path, char **args, char **env)
 {
 	if (execve(path, args, env) == -1)
-		handle_cmd_errors(args, path);
+		ft_handle_cmd_errors(args, path);
 	exit(1);
 }
 
@@ -68,10 +68,10 @@ void	exec(char *cmd, char **env)
 	args = parse_command(cmd);
 	if (!args)
 		return ;
-	path = get_cmd(env, args[0]);
+	path = ft_get_cmd(env, args[0]);
 	if (!path)
 	{
-		handle_cmd_errors(args, path);
+		ft_handle_cmd_errors(args, path);
 		return ;
 	}
 	pid = fork();
@@ -94,14 +94,16 @@ int	main(int ac, char **av, char **env)
 	(void)av;
 	while (1)
 	{
-		// data_init(&data, env);
-		prompt = prompt_name();
+		prompt = ft_prompt_name();
 		data.input = readline(prompt);
-		parsing(&data);
+		if (!data.input)
+			break ;
+		ft_parsing(&data, data.input);
 		if (!built_in_commands(&data, env))
 			exec(data.input, env);
 		add_history(data.input);
+		free(data.input);
+		free(prompt);
 	}
-	free(data.input);
 	return (0);
 }

@@ -1,28 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   utils_path.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/23 12:35:32 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/23 20:01:13 by clnicola         ###   ########.fr       */
+/*   Created: 2025/10/20 11:56:43 by clnicola          #+#    #+#             */
+/*   Updated: 2025/11/23 20:17:20 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_strisnum(char *str)
+char	*ft_get_cmd(char **env, char *cmd)
 {
-	int	i;
+	int		i;
+	char	**path;
+	char	*temp;
+	char	*full_path;
 
 	i = 0;
-	while (str[i])
+	if (!cmd || !*cmd)
+		exit(1);
+	path = ft_split(ft_get_path(env), ':');
+	while (path[i])
 	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		else
-			i++;
+		temp = ft_strjoin(path[i], "/");
+		full_path = ft_strjoin(temp, cmd);
+		free(temp);
+		if (access(full_path, F_OK | X_OK) == 0)
+		{
+			ft_free_tabs(path);
+			return (full_path);
+		}
+		free(full_path);
+		i++;
 	}
-	return (1);
+	ft_free_tabs(path);
+	return (NULL);
 }

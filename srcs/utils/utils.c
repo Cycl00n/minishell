@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:56:43 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/06 14:23:01 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/23 20:17:20 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,44 +41,6 @@ char	*ft_get_path(char **env)
 	return (NULL);
 }
 
-char	*ft_get_cmd(char **env, char *cmd)
-{
-	int		i;
-	char	**path;
-	char	*temp;
-	char	*full_path;
-
-	i = 0;
-	if (!cmd || !*cmd)
-		exit(1);
-	path = ft_split(ft_get_path(env), ':');
-	while (path[i])
-	{
-		temp = ft_strjoin(path[i], "/");
-		full_path = ft_strjoin(temp, cmd);
-		free(temp);
-		if (access(full_path, F_OK | X_OK) == 0)
-		{
-			ft_free_tabs(path);
-			return (full_path);
-		}
-		free(full_path);
-		i++;
-	}
-	ft_free_tabs(path);
-	return (NULL);
-}
-
-void	ft_handle_cmd_errors(char **args, char *path)
-{
-	ft_putstr_fd("command not found: ", 2);
-	ft_putstr_fd(args[0], 2);
-	ft_putchar_fd('\n', 2);
-	free(path);
-	ft_free_tabs(args);
-	return ;
-}
-
 char	*ft_prompt_name(void)
 {
 	char	*user;
@@ -90,4 +52,13 @@ char	*ft_prompt_name(void)
 	prompt = ft_strjoin(tmp, "\033[0m\002$ ");
 	free(tmp);
 	return (prompt);
+}
+
+void	ft_handle_cmd_errors(char **args, char *path)
+{
+	ft_putstr_fd("command not found: ", 2);
+	ft_putstr_fd(args[0], 2);
+	ft_putchar_fd('\n', 2);
+	free(path);
+	ft_free_tabs(args);
 }

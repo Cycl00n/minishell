@@ -1,28 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils1.c                                           :+:      :+:    :+:   */
+/*   lexer_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/23 12:35:32 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/23 20:01:13 by clnicola         ###   ########.fr       */
+/*   Created: 2025/11/23 18:50:00 by clnicola          #+#    #+#             */
+/*   Updated: 2025/11/23 20:21:44 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_strisnum(char *str)
+int	ft_is_space(char c)
 {
-	int	i;
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\r');
+}
 
-	i = 0;
-	while (str[i])
-	{
-		if (!ft_isdigit(str[i]))
-			return (0);
-		else
-			i++;
-	}
-	return (1);
+int	ft_is_operator(char c)
+{
+	return (c == '|' || c == '<' || c == '>');
 }
