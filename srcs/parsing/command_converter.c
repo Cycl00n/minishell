@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 18:26:35 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/23 22:00:00 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/24 10:32:39 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_command	*ft_tokens_to_commands(t_token *token_list)
 	while (token_list)
 	{
 		arg_count = ft_count_args(token_list);
-		new_cmd = ft_new_command();
+		new_cmd = ft_new_command(arg_count);
 		if (!new_cmd)
 			return (NULL);
 		new_cmd->args = ft_build_args(token_list, arg_count);

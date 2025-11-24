@@ -6,20 +6,25 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 18:26:35 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/23 22:00:00 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/24 10:30:43 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_command	*ft_new_command(void)
+t_command	*ft_new_command(int arg_count)
 {
 	t_command	*cmd;
+	int			cap;
 
 	cmd = malloc(sizeof(t_command));
 	if (!cmd)
 		return (NULL);
-	cmd->args = malloc(sizeof(char *) * 256);
+	if (arg_count <= 0)
+		cap = 1;
+	else
+		cap = arg_count;
+	cmd->args = malloc(sizeof(char *) * (cap + 1));
 	if (!cmd->args)
 	{
 		free(cmd);

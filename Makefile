@@ -10,7 +10,7 @@ INC_PATH = ./includes/
 LIBFT_PATH = ./Libft/
 LIBFT = ./includes/$(LIBFT_PATH)libft.a
 
-SRC = parsing/main_parsing.c\
+SRC = parsing/main.c\
 parsing/parsing_helpers.c\
 parsing/lexer_utils.c\
 parsing/word_extraction.c\
