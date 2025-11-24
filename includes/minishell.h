@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:25:06 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/23 20:28:11 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/24 10:30:54 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,10 +88,10 @@ char					*build_unquoted_token(char *str, int *i, int len);
 void					copy_quoted(char *str, int *i, char *result, int *j);
 t_command				*parse_tokens(t_token *tok);
 t_command				*new_cmd(void);
+t_command				*ft_new_command(int arg_count);
 void					add_arg(t_command *cmd, char *arg);
 void					add_redir(t_command *cmd, int type, char *file);
 t_command				*ft_tokens_to_commands(t_token *token_list);
-t_command				*ft_new_command(void);
 void					ft_add_back_command(t_command **head, t_command *new);
 int						ft_count_args(t_token *token_list);
 char					**ft_build_args(t_token *token_list, int arg_count);
