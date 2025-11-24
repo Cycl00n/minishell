@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 18:26:35 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/24 10:30:43 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/24 12:41:43 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ t_command	*ft_new_command(int arg_count)
 {
 	t_command	*cmd;
 	int			cap;
+	int			i;
 
 	cmd = malloc(sizeof(t_command));
 	if (!cmd)
@@ -30,6 +31,10 @@ t_command	*ft_new_command(int arg_count)
 		free(cmd);
 		return (NULL);
 	}
+	i = 0;
+	while (i <= cap)
+		cmd->args[i++] = NULL;
+	cmd->redirs = NULL;
 	cmd->next = NULL;
 	return (cmd);
 }
