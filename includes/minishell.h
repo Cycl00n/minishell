@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:25:06 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/25 13:42:18 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/25 21:20:55 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,27 +109,22 @@ int						ft_is_space(char c);
 int						ft_is_operator(char c);
 
 /*------BUILTIN------*/
-int						builtin_commands(t_data *data);
+void					builtin_commands(t_data *data);
 void					builtin_echo(t_data *data);
+char					*ft_export_noargs(t_env **env);
+void					ft_export(char **args, t_env **env);
+char					*ft_env(t_env **env);
+void					ft_unset(char **args, t_env **env);
+int						ft_cd(char *path, t_env **env);
+void					builtin_exit(t_data *data);
 
-/*------HELPER FUNCTIONS------*/
-void					ft_init_data(t_data *data, char **env);
-void					ft_free_data(t_data *data);
-void					ft_signal_handler(int sig);
-void					ft_set_signal_handlers(void);
-void					ft_unset_signal_handlers(void);
-void					ft_exec_cmd(t_command *cmd, char **env);
-void					ft_pipex(t_command *cmd, char **env);
-void					ft_here_doc(t_command *cmd, char **env);
-void					ft_redir_in(t_command *cmd);
-void					ft_redir_out(t_command *cmd);
-void					ft_exec_builtins(t_command *cmd, char **env);
-int						ft_is_builtin(char *cmd);
-char					*ft_getenv(char *name, char **env);
-void					ft_setenv(char *name, char *value, char **env);
-void					ft_unsetenv(char *name, char **env);
-void					ft_cd(char *path, char **env);
-void					ft_pwd(void);
-void					ft_exit(t_data *data);
-
+/*---COMMANDS_UTILS---*/
+int						ft_set_env(char *name, char *value, t_env **env);
+char					*ft_get_env_value(char *name, t_env **env);
+int						ft_rm_env(char *name, t_env **env);
+t_env					**ft_initialize_env(void);
+t_env					*ft_new_env_var(char *name, char *value, t_env *next);
+t_env					**ft_copy_env(t_env **env);
+void					ft_swap_env(t_env **env, t_env *to_swap);
+void					ft_free_env(t_env **env);
 #endif

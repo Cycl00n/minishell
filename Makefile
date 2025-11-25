@@ -1,17 +1,26 @@
 NAME = minishell
 
 CC = cc
-C_FLAGS = -Wall -Wextra -Werror
+C_FLAGS = -Wall -Wextra -Werror -no-pie
 
 SRC_PATH = ./srcs/
 OBJ_PATH = ./objs/
 INC_PATH = ./includes/
 
-LIBFT_PATH = ./Libft/
-LIBFT = ./includes/$(LIBFT_PATH)libft.a
+LIBFT_PATH = ./includes/Libft/
+LIBFT = $(LIBFT_PATH)libft.a
 
 SRC = main.c\
+builtin/main_builtin.c\
+builtin/ft_cd.c\
+builtin/ft_env.c\
+builtin/ft_exit.c\
+builtin/ft_export.c\
+builtin/ft_pwd.c\
+builtin/ft_unset.c\
 builtin/builtin_echo.c\
+builtin/env_utils.c\
+builtin/env_utils_2.c\
 parsing/main_parsing.c\
 parsing/parsing_helpers.c\
 parsing/lexer_utils.c\
@@ -43,7 +52,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.c
 	$(CC) $(C_FLAGS) -c $< -o $@ $(INC)
 
 $(NAME): $(OBJS)
-	$(CC) $(C_FLAGS) $(OBJS) -o $@ $(INC) $(LIBFT) -lreadline -lhistory
+	$(CC) $(C_FLAGS) $(OBJS) -o $@ $(INC) -L$(LIBFT_PATH) -lft -lreadline -lhistory
 
 $(LIBFT):
 	make -C $(LIBFT_PATH)

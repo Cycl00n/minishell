@@ -6,24 +6,11 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:33:02 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/25 20:04:59 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/25 21:06:28 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int	builtin_commands(t_data *data)
-{
-	if (!data || !data->cmd || !data->cmd->args || !data->cmd->args[0])
-		return (0);
-	if (!ft_strcmp(data->cmd->args[0], "echo"))
-	{
-		builtin_echo(data);
-		return (1);
-	}
-	else
-		return (0);
-}
 
 static void	ft_print_fd(t_data *data, int i)
 {
