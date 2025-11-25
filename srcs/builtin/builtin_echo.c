@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:33:02 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/25 15:09:02 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/25 15:12:49 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,8 @@ void	builtin_echo(t_data *data)
 	int	i;
 
 	i = 1;
+	if (!data->cmd->args || !data->cmd->args[1])
+		return ;
 	if (ft_strcmp(data->cmd->args[1], "-n"))
 	{
 		//
