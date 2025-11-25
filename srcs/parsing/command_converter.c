@@ -6,18 +6,63 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/23 18:26:35 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/24 12:44:44 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/25 13:00:16 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+static int	is_redirection_type(int t)
+{
+	return (t == INPUT || t == TRUNC || t == APPEND || t == HEREDOC);
+}
+
+static int	handle_word(t_command *cmd, t_token **tok_ptr, int idx)
+{
+	cmd->args[idx++] = (*tok_ptr)->token;
+	*tok_ptr = (*tok_ptr)->next;
+	return (idx);
+}
+
+static void	handle_redirection_token(t_command *cmd, t_token **tok_ptr)
+{
+	t_token	*tok;
+
+	tok = *tok_ptr;
+	if (tok->next && (tok->next->type == WORD || tok->next->type == VAR))
+	{
+		add_redir(cmd, tok->type, tok->next->token);
+		*tok_ptr = tok->next->next;
+	}
+	else
+		*tok_ptr = tok->next;
+}
+
+static void	populate_command(t_command *cmd, t_token **tok_ptr)
+{
+	int		i;
+	t_token	*tok;
+
+	i = 0;
+	tok = *tok_ptr;
+	while (tok && tok->type != PIPE)
+	{
+		if (tok->type == WORD || tok->type == VAR)
+			i = handle_word(cmd, &tok, i);
+		else if (is_redirection_type(tok->type))
+			handle_redirection_token(cmd, &tok);
+		else
+			tok = tok->next;
+	}
+	cmd->args[i] = NULL;
+	*tok_ptr = tok;
+}
 
 t_command	*ft_tokens_to_commands(t_token *token_list)
 {
 	t_command	*head;
 	t_command	*new_cmd;
 	int			arg_count;
-	int			i;
 
 	head = NULL;
 	while (token_list)
@@ -26,37 +71,8 @@ t_command	*ft_tokens_to_commands(t_token *token_list)
 		new_cmd = ft_new_command(arg_count);
 		if (!new_cmd)
 			return (NULL);
-		// Fill args and redirections by scanning until PIPE or end
-		i = 0;
-		while (token_list && token_list->type != PIPE)
-		{
-			if (token_list->type == WORD || token_list->type == VAR)
-			{
-				// assign argument pointer (assume ownership elsewhere)
-				new_cmd->args[i++] = token_list->token;
-			}
-			else if (token_list->type == INPUT || token_list->type == TRUNC
-				|| token_list->type == APPEND || token_list->type == HEREDOC)
-			{
-				if (token_list->next && (token_list->next->type == WORD
-						|| token_list->next->type == VAR))
-				{
-					add_redir(new_cmd, token_list->type,
-						token_list->next->token);
-					// skip the file token
-					token_list = token_list->next;
-				}
-				else
-				{
-					// syntax error or missing target: ignore gracefully
-				}
-			}
-			token_list = token_list->next;
-		}
-		// ensure args are null-terminated
-		new_cmd->args[i] = NULL;
+		populate_command(new_cmd, &token_list);
 		ft_add_back_command(&head, new_cmd);
-		// if current token is a PIPE, advance past it
 		if (token_list && token_list->type == PIPE)
 			token_list = token_list->next;
 	}
