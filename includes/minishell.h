@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:25:06 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/25 13:12:49 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/25 13:42:18 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,9 +109,8 @@ int						ft_is_space(char c);
 int						ft_is_operator(char c);
 
 /*------BUILTIN------*/
-void					builtin_echo(char *cmd);
-void					builtin_exit(char *cmd);
-void					builtin_env(char *cmd, char **env);
+int						builtin_commands(t_data *data);
+void					builtin_echo(t_data *data);
 
 /*------HELPER FUNCTIONS------*/
 void					ft_init_data(t_data *data, char **env);

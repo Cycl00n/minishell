@@ -11,6 +11,7 @@ LIBFT_PATH = ./Libft/
 LIBFT = ./includes/$(LIBFT_PATH)libft.a
 
 SRC = main.c\
+builtin/builtin_echo.c\
 parsing/main_parsing.c\
 parsing/parsing_helpers.c\
 parsing/lexer_utils.c\

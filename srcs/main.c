@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:10:38 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/25 13:13:02 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/25 14:49:50 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,9 @@ int	main(int ac, char **av, char **env)
 		data->input = readline("testenv$ ");
 		if (!data->input)
 			break ;
-		ft_parsing(data, data->input);
 		add_history(data->input);
+		ft_parsing(data, data->input);
+		builtin_commands(data);
 		tmp = data->token;
 		while (tmp)
 		{
