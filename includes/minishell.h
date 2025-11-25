@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:25:06 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/24 10:30:54 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/25 13:12:49 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,6 +96,7 @@ void					ft_add_back_command(t_command **head, t_command *new);
 int						ft_count_args(t_token *token_list);
 char					**ft_build_args(t_token *token_list, int arg_count);
 t_token					*ft_skip_to_next_pipe(t_token *token_list);
+void					ft_display_commands(t_command *cmd);
 
 /*------UTILS------*/
 void					ft_free_tabs(char **args);
