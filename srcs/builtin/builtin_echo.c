@@ -6,7 +6,7 @@
 /*   By: clnicola <clnicola@student.42luxembourg    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/25 13:33:02 by clnicola          #+#    #+#             */
-/*   Updated: 2025/11/25 15:12:49 by clnicola         ###   ########.fr       */
+/*   Updated: 2025/11/25 20:04:59 by clnicola         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,17 +25,8 @@ int	builtin_commands(t_data *data)
 		return (0);
 }
 
-void	builtin_echo(t_data *data)
+static void	ft_print_fd(t_data *data, int i)
 {
-	int	i;
-
-	i = 1;
-	if (!data->cmd->args || !data->cmd->args[1])
-		return ;
-	if (ft_strcmp(data->cmd->args[1], "-n"))
-	{
-		//
-	}
 	while (data->cmd->args[i])
 	{
 		ft_putstr_fd(data->cmd->args[i], STDOUT_FILENO);
@@ -43,5 +34,22 @@ void	builtin_echo(t_data *data)
 			ft_putstr_fd(" ", STDOUT_FILENO);
 		i++;
 	}
-	ft_putstr_fd("\n", STDOUT_FILENO);
+}
+void	builtin_echo(t_data *data)
+{
+	int	i;
+
+	i = 1;
+	if (!data->cmd->args || !data->cmd->args[1])
+		return ;
+	if (!ft_strcmp(data->cmd->args[1], "-n"))
+	{
+		i = 2;
+		ft_print_fd(data, i);
+	}
+	else
+	{
+		ft_print_fd(data, i);
+		ft_putstr_fd("\n", STDOUT_FILENO);
+	}
 }
